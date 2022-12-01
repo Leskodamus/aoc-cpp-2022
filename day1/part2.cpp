@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include <ios>
 #include <iostream>
 #include <fstream>
@@ -9,7 +10,8 @@ using namespace std;
 int main(void) {
     ifstream ifs("./input", ios_base::in);
     if (!ifs.is_open()) {
-        cerr << "Failed to open input file\n";
+        cerr << "Failed to open input file.\n";
+        return EXIT_FAILURE;
     }
 
     string line;
