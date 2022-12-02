@@ -61,25 +61,21 @@ int main(void) {
             return EXIT_FAILURE;
         }
 
-        if (round.first == Rock && round.second == Rock) {
-            score += Draw + Rock; 
-        } else if (round.first == Paper && round.second == Paper) {
-            score += Draw + Paper; 
-        } else if (round.first == Scissors && round.second == Scissors) {
-            score += Draw + Scissors; 
+        if (round.first == round.second) {
+            score += Draw + round.first; 
         } else if (round.first == Rock && round.second == Paper) {
             score += Win + Paper;
         } else if (round.first == Rock && round.second == Scissors) {
             score += Lose + Scissors;
-        } else if (round.first == Paper && round.second == Rock) {
-            score += Lose + Rock;
         } else if (round.first == Paper && round.second == Scissors) {
             score += Win + Scissors;
-        } else if (round.first == Scissors && round.second == Paper) {
-            score += Lose + Paper;
+        } else if (round.first == Paper && round.second == Rock) {
+            score += Lose + Rock;
         } else if (round.first == Scissors && round.second == Rock) {
             score += Win + Rock;
-        }  
+        } else if (round.first == Scissors && round.second == Paper) {
+            score += Lose + Paper;
+        }
     }
 
     cout << "Total score: " << score << '\n';
