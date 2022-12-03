@@ -34,5 +34,5 @@ int main(void) {
         }
     }
 
-    cout << "Total score: " << sum << '\n';
+    cout << "Sum of priorities: " << sum << '\n';
 }
