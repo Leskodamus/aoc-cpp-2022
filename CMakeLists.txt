@@ -11,6 +11,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED on)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
+add_subdirectory(./utils)
 add_subdirectory(./day1)
 add_subdirectory(./day2)
 add_subdirectory(./day3)

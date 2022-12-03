@@ -4,22 +4,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+
+#include "../utils/utils.hpp"
 
 using namespace std;
 
 int main(void) {
-    ifstream ifs("./input", ios_base::in);
-    if (!ifs.is_open()) {
-        cerr << "Failed to open input file.\n";
-        return EXIT_FAILURE;
-    }
-
-    string line;
+    auto input = utils::read_file("./input");
     long tmp = 0;
     long max[3] = {0};
 
-    while (getline(ifs, line)) {
-        if (line.empty() || ifs.peek() == EOF) {
+    for (auto line = input.cbegin(); line != input.cend(); ++line) {
+        if (line->empty() || line + 1 == input.cend()) {
             for (size_t i = 0; i < sizeof(max); ++i) {
                 if (tmp > max[i]) {
                     max[i] ^= tmp;
@@ -29,8 +26,9 @@ int main(void) {
             }
             tmp = 0;
         } else {
-            tmp += stol(line);
+            tmp += stol(*line);
         }
     }
+
     cout << "Max calories: " << max[0] + max[1] + max[2] << endl;
 }

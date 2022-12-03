@@ -2,22 +2,19 @@
 #include <fstream>
 #include <string>
 #include <set>
+#include <vector>
+
+#include "../utils/utils.hpp"
 
 using namespace std;
 
 int main(void) {
-    ifstream ifs("./input", ios_base::in);
-    if (!ifs.is_open()) {
-        cerr << "Failed to open input file.\n";
-        return EXIT_FAILURE;
-    }
-    
-    string line;
+    auto input = utils::read_file("./input");
     string group[3];
     int gc = 0;
     int sum = 0;
 
-    while (getline(ifs, line)) {
+    for (auto line : input) {
         group[gc++] = line;
 
         if (gc == 3) {

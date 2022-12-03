@@ -4,6 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <vector>
+
+#include "../utils/utils.hpp"
 
 using namespace std;
 
@@ -20,17 +23,13 @@ enum Shape {
 };
 
 int main(void) {
-    ifstream ifs("./input", ios_base::in);
-    if (!ifs.is_open()) {
-        cerr << "Failed to open input file.\n";
-        return EXIT_FAILURE;
-    }
+    auto input = utils::read_file("./input");
     
     size_t score = 0;
     string line;
     pair<Shape, Shape> round;
 
-    while (getline(ifs, line)) {
+    for (auto line : input) {
         auto delim = line.find(' ');
         auto guide = make_pair(
             line.substr(0, delim),

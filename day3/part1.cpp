@@ -2,20 +2,17 @@
 #include <fstream>
 #include <string>
 #include <set>
+#include <vector>
+
+#include "../utils/utils.hpp"
 
 using namespace std;
 
 int main(void) {
-    ifstream ifs("./input", ios_base::in);
-    if (!ifs.is_open()) {
-        cerr << "Failed to open input file.\n";
-        return EXIT_FAILURE;
-    }
-    
-    string line;
+    auto input = utils::read_file("./input");
     int sum = 0;
 
-    while (getline(ifs, line)) {
+    for (auto line : input) {
         auto len = line.length();
         auto mid = len / 2;
         string fst = line.substr(0, mid);
