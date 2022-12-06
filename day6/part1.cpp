@@ -17,7 +17,8 @@ int main(void) {
 
     for (auto line : input) {
         for (size_t i = 0; i < line.size(); ++i) {
-            if (set<char>{
+            if (i + sopm_size < line.size() && 
+                set<char>{
                     line.begin() + i, line.begin() + i + sopm_size
                 }.size() == sopm_size) 
             {
