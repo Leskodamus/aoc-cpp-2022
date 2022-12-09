@@ -69,7 +69,6 @@ struct Rope {
         while (steps > 0) {
             Position *head = &knots[0];
             head->move_position(dir, 1);
-            cout << "HEAD: " << head->x << ' ' << head->y << '\n';
 
             /* Move all the knots behind head */
             for (size_t i = 1; i < 10; ++i) {
@@ -115,16 +114,26 @@ struct Rope {
                     {
                         knot->move_position(Direction::RIGHT, 1);
                         knot->move_position(Direction::DOWN, 1);
+                    } else {
+                        /* The knot must to be moved diagonally if it's head moved diagonally */
+                        int dx = abs(head->x - knot->x) - 1;
+                        int dy = abs(head->y - knot->y) - 1;
+                        if (head->x < knot->x) {
+                            knot->move_position(Direction::LEFT, dx);
+                        } else if (head->x > knot->x) {
+                            knot->move_position(Direction::RIGHT, dx);
+                        }
+
+                        if (head->y < knot->y) {
+                            knot->move_position(Direction::DOWN, dy);
+                        } else if (head->y > knot->y) {
+                            knot->move_position(Direction::UP, dy);
+                        }
                     }
                 }
-
-                cout << "KNOT: " << knot->x << ' ' << knot->y << '\n';
-
                 pos_visited_by_tail.insert(*tail);
-
                 head = knot;
             }
-            cout << "-----\n";
             --steps;
         }
     }
