@@ -61,7 +61,6 @@ struct Position {
 struct Rope {
     Position head;
     Position tail;
-    /* vector<Position> pos_visited_by_tail; */
     unordered_set<Position, Position::PositionHash> pos_visited_by_tail;
 
     void move_head(const Direction &dir, size_t steps) {
@@ -115,7 +114,6 @@ struct Rope {
             if (find(pos_visited_by_tail.cbegin(), pos_visited_by_tail.cend(), tail) 
                 == pos_visited_by_tail.cend())
             {
-                /* pos_visited_by_tail.push_back(tail); */
                 pos_visited_by_tail.insert(tail);
             }
 
