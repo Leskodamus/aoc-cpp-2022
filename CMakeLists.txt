@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(aoc-2022
-    VERSION 0.11
+    VERSION 0.12
     DESCRIPTION "Advent of Code 2022 using C/C++"
     LANGUAGES C CXX
 )
@@ -23,3 +23,4 @@ add_subdirectory(./day8)
 add_subdirectory(./day9)
 add_subdirectory(./day10)
 add_subdirectory(./day11)
+add_subdirectory(./day12)
