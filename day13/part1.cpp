@@ -1,49 +1,95 @@
+#include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <stack>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
+#include <variant>
 
 #include "../utils/utils.hpp"
 
 using namespace std;
 
-bool is_number(const char n) {
-    return n >= '0' && n <= '9';
-}
+struct Value;
+using List = vector<Value>;
 
-bool compare_pair(const string& lhs, const string& rhs) {
-    int l = 0, r = 0;
-    while (l < lhs.size() && r < rhs.size()) {
-        if (is_number(lhs[l]) && is_number(rhs[r])) {
-            int n1 = 0, n2 = 0;
+/* Value can either be an integer or a list (vector) */
+struct Value : public variant<int, List> {
+    friend auto operator<(const Value &a, const Value &b) -> bool;
+};
 
-            while (is_number(lhs[l]))
-                n1 = n1 * 10 + (lhs[l++] - '0');
-            while (is_number(rhs[r]))
-                n2 = n2 * 10 + (rhs[r++] - '0');
-
-            if (n1 == n2) continue;
-            else if (n1 < n2) return true;
-
-            break;
-        } else if (lhs[l] == rhs[r]) {
-            ++l;
-            ++r;
-        }  else if (lhs[l] == ']') {
-            return true;
-        }  else if (rhs[r] == ']') {
-            break;
-        } else if (lhs[l] == '[' || lhs[l] == ',') {
-            ++l; 
-        } else if (rhs[r] == '[' || rhs[r] == ',') {
-            ++r; 
-        }    
+struct ValueComparator {
+    auto operator()(int a, int b) const -> bool {
+        return a < b;
     }
 
-    if (l == lhs.size()) return true;
-     
-    return false;
+    auto operator()(const List &a, const List &b) const -> bool {
+        return lexicographical_compare(
+            a.cbegin(), a.cend(), 
+            b.cbegin(), b.cend()
+        );
+    }
+
+    auto operator()(int a, const List &b) const -> bool {
+        return (*this)(List{Value{a}}, b);
+    }
+
+    auto operator()(const List &a, int b) const -> bool {
+        return (*this)(a, List{Value{b}});
+    }
+};
+
+auto operator<(const Value &a, const Value &b) -> bool {
+    return visit(ValueComparator{}, a, b);
+}
+
+static Value parse(const string &line) {
+    Value values{List{}};
+    stack<Value*> ptr_stack;
+    ptr_stack.push(&values);
+
+    for (size_t i = 0; i < line.size(); ++i) {
+        const char c = line[i];
+        if (c == '[') {
+            /* Opening bracket means creating a new list (vector) */
+            /* Note: emplace_back() returns a reference to inserted item */
+            ptr_stack.push(
+                &get<List>(*ptr_stack.top())
+                    .emplace_back(Value{List{}})
+            );
+        } else if (c == ']') {
+            ptr_stack.pop();
+        } else if (c == ',') 
+            continue;
+        else {
+            if (line[i+1] == ',' || line[i+1] == ']') {
+                /* One digit number, e.g. 0-9 */
+                get<List>(*ptr_stack.top()).push_back(
+                    Value{stoi(line.substr(i, 1))}
+                );
+            } else if (line[i+2] == ',' || line[i+2] == ']') {
+                /* Two digit number, e.g. 10 */
+                get<List>(*ptr_stack.top()).push_back(
+                    Value{stoi(line.substr(i, 2))}
+                );
+                ++i;
+            }
+        }
+    }
+
+    return values;
+}
+
+void print_value(const Value &value) {
+    if (value.index() == 0)
+        cout << get<int>(value) << ' ';
+    else {
+        for (const auto &v : get<List>(value)) {
+            print_value(v);
+        }
+    }
 }
 
 int main(void) {
@@ -53,7 +99,9 @@ int main(void) {
     for (auto line = input.cbegin(); line != input.cend(); ++line) {
         if (line->empty()) continue;
         ++idx;
-        if (compare_pair(*line, *(line + 1))) {
+        auto v1 = parse(*line);
+        auto v2 = parse(*(line + 1));
+        if (v1 < v2) {
             sum += idx;
         }
         ++line;
