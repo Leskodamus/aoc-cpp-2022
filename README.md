@@ -2,7 +2,7 @@
 
 **Languages in use**
 
-* C/C++
+* C11/C++17
 
 ## Finished
 
